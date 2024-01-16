@@ -12,6 +12,7 @@ const AuthForm = ({ title, buttonText, bottomText, isSignUp }) => {
 
     const email = useRef(null);
     const password = useRef(null);
+    const name = useRef(null);
 
 
     const goToSignUpPage = () => {
@@ -27,7 +28,8 @@ const AuthForm = ({ title, buttonText, bottomText, isSignUp }) => {
     }
 
     const handleOnClickForm = () => {
-        const validData = checkValidData(email.current.value, password.current.value);
+
+        const validData = signUp ? checkValidData(email.current.value, password.current.value, name.current.value) : checkValidData(email.current.value, password.current.value, null);
         console.log(validData);
         setErrorMessage(validData);
     }
@@ -43,7 +45,7 @@ const AuthForm = ({ title, buttonText, bottomText, isSignUp }) => {
             {signUp ? (
                 <>
                     <input type='text' placeholder='Full Name' className='p-2 m-2 w-full max-w-[314px] h-[50px] text-white bg-gray-700' />
-                    <input type='text' placeholder='Username' className='p-2 m-2 w-full max-w-[314px] h-[50px] text-white bg-gray-700' />
+                    <input ref={name} type='text' placeholder='Username' className='p-2 m-2 w-full max-w-[314px] h-[50px] text-white bg-gray-700' />
                 </>
             ) : null}
 
