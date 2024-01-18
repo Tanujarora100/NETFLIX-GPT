@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { checkValidData } from '../validations/LoginValidation';
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import auth from '../config/fireBaseConfig';
 
 const AuthForm = ({ title, buttonText, bottomText, isSignUp }) => {
 
@@ -28,10 +30,30 @@ const AuthForm = ({ title, buttonText, bottomText, isSignUp }) => {
     }
 
     const handleOnClickForm = () => {
+        const { value: emailValue } = email.current;
+        const { value: passwordValue } = password.current;
+        const { value: nameValue } = name.current;
 
-        const validData = signUp ? checkValidData(email.current.value, password.current.value, name.current.value) : checkValidData(email.current.value, password.current.value, null);
+        const validData = signUp ? checkValidData(emailValue, passwordValue, nameValue) : checkValidData(emailValue, passwordValue, null);
         console.log(validData);
         setErrorMessage(validData);
+        if (validData) {
+            createUserWithEmailAndPassword(auth, emailValue, passwordValue)
+                .then((userCredential) => {
+
+                    const user = userCredential.user;
+                    console.log(user);
+
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.warn(errorCode + errorMessage);
+                    setErrorMessage(errorMessage);
+
+                });
+            goToHomePage();
+        }
     }
 
     const formType = signUp ? "Sign Up" : "Sign In";

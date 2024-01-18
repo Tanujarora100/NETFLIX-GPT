@@ -1,6 +1,6 @@
 export const checkValidData = (email, password, name) => {
     if (name !== null && name !== '') {
-        if (name.length<3) {
+        if (name.length < 3) {
             return "UserName is not valid";
         }
     } else {
