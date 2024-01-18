@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { checkValidData } from '../validations/LoginValidation';
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useRef } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import auth from '../config/fireBaseConfig';
-import { goToHomePage, goToBrowsePage, goToSignUpPage } from '../utils/navigationUtils';
+// import { goToHomePage, goToBrowsePage, goToSignUpPage } from '../utils/navigationUtils';
 const AuthForm = ({ title, buttonText, bottomText, isSignUp }) => {
 
     const [signUp, setSignUp] = useState(isSignUp);
@@ -14,11 +14,23 @@ const AuthForm = ({ title, buttonText, bottomText, isSignUp }) => {
     const password = useRef(null);
     const name = useRef(null);
 
+
+    const navigateTo = useNavigate();
+
+    const goToHomePage = () => {
+        navigateTo('/');
+    }
+    const goToBrowsePage = () => {
+        navigateTo('/browse');
+    }
+    const goToSignUpPage = () => {
+        navigateTo('/signup');
+    }
     const toggleSignInForm = () => {
         setSignUp(prevSignUp => !prevSignUp);
 
     }
-   
+
 
     const handleOnClickForm = () => {
         const { value: emailValue } = email.current;
