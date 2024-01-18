@@ -1,49 +1,37 @@
 import React, { useState } from 'react';
 import { checkValidData } from '../validations/LoginValidation';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from "react-router-dom"
 import { useRef } from 'react';
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import auth from '../config/fireBaseConfig';
-
+import { goToHomePage, goToBrowsePage, goToSignUpPage } from '../utils/navigationUtils';
 const AuthForm = ({ title, buttonText, bottomText, isSignUp }) => {
 
     const [signUp, setSignUp] = useState(isSignUp);
     const [errorMessage, setErrorMessage] = useState("");
-    const navigate = useNavigate()
-
 
     const email = useRef(null);
     const password = useRef(null);
     const name = useRef(null);
 
-
-    const goToSignUpPage = () => {
-        navigate('/signup')
-    }
-
-    const goToHomePage = () => {
-        navigate('/')
-    }
     const toggleSignInForm = () => {
         setSignUp(prevSignUp => !prevSignUp);
 
     }
+   
 
     const handleOnClickForm = () => {
         const { value: emailValue } = email.current;
         const { value: passwordValue } = password.current;
-        const { value: nameValue } = name.current;
 
-        const validData = signUp ? checkValidData(emailValue, passwordValue, nameValue) : checkValidData(emailValue, passwordValue, null);
+        const validData = signUp ? checkValidData(emailValue, passwordValue, null) : checkValidData(emailValue, passwordValue, null);
         console.log(validData);
         setErrorMessage(validData);
-        if (validData) {
+        if (validData && signUp) {
             createUserWithEmailAndPassword(auth, emailValue, passwordValue)
                 .then((userCredential) => {
-
                     const user = userCredential.user;
                     console.log(user);
-
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -52,7 +40,23 @@ const AuthForm = ({ title, buttonText, bottomText, isSignUp }) => {
                     setErrorMessage(errorMessage);
 
                 });
-            goToHomePage();
+            // goToHomePage();
+        }
+        else if (validData) {
+            signInWithEmailAndPassword(auth, emailValue, passwordValue)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log(user);
+                    console.log("User Getting Signed in ")
+                    // jumpToBrowse();
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorMessage);
+                    // goToHomePage();
+                });
+
         }
     }
 

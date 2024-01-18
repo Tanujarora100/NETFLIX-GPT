@@ -1,10 +1,16 @@
-import { useNavigate } from 'react-router-dom';
-const navigate = useNavigate()
 
+
+import { useNavigate } from 'react-router-dom';
 export const goToSignUpPage = () => {
-    navigate('/signup')
-}
+    const navigateTo = useNavigate();
+    navigateTo('/signup');
+};
 
 export const goToHomePage = () => {
-    navigate('/')
+    const navigateTo = useNavigate();
+    navigateTo('/');
+}
+export const goToBrowsePage = () => {
+    const navigateTo = useNavigate();
+    navigateTo('/browse');
 }
